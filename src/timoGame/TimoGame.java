@@ -84,6 +84,7 @@ public class TimoGame extends JPanel {
     /*
      * 整个游戏的主画笔，调用其他类进行画对象
      */
+    @Override
     public void paint(Graphics g) {
         // paint系统自动调用，g相当于画笔
         /*
@@ -166,7 +167,7 @@ public class TimoGame extends JPanel {
             period = (int) ((endTime.getTime() - startTime.getTime()) / 1000);
             g.drawString("游戏时间：" + period + "秒" + "  分数：" + score + "分", 220, 40);
         }
-        if (Timo.live == false) {
+        if (! Timo.live) {
             if (explode == null) {
                 explode = new Explode(Timo.x, Timo.y);
             }
@@ -181,19 +182,23 @@ public class TimoGame extends JPanel {
      *
      */
     class PaintThread extends Thread {
+        @Override
         public void run() {
             while (start) {
                 // while语句既是循环语句，又是判断语句，start初始值为true，默认线程启动
                 if (a == 8)// 增加弓箭画出的延迟时间，防止按住空格一发弓箭
+                {
                     fire = true;
+                }
                 a++;// 循环a次发射弓箭，相当于a*40毫秒发射一次子弹
                 try {
                     sleep(40);// 40毫秒，sleep()必须写在try-catch之间
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (! start)
+                if (! start) {
                     break;// 结束线程
+                }
                 repaint();// 重画，放置线程内可以调节重画的时间
             }
         }
